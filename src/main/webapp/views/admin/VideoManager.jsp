@@ -9,9 +9,10 @@
 <body>
 <h1>VideoManager</h1>
 <div>
-<a href="${pageContext.request.contextPath}/admin/video/details">Video Details</a> |
-<a href="${pageContext.request.contextPath}/admin/video/list">Video List</a> |
+<a href="${pageContext.request.contextPath}/admin/video/details" class="btn btn-primary me-2"><i class="bi bi-plus me-1"></i> Thêm Video Mới</a> |
+<a href="${pageContext.request.contextPath}/admin/video/list" class="btn btn-info text-white"><i class="bi bi-list me-1"></i> Danh Sách Video</a>
 </div>
+<hr>
 <div>
 	<jsp:include page="${subpage}"></jsp:include>
 </div>

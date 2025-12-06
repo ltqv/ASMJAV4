@@ -1,7 +1,5 @@
 package servlet;
 
-
-
 import entity.Video;
 import java.io.IOException;
 
@@ -29,15 +27,15 @@ public class VideoDetailServlet extends HttpServlet {
         }
 
         Video video = videoDAO.findById(id);
-
-        if(video == null) {
-            resp.sendRedirect(req.getContextPath() + "/home");
-            return;
-        }
+        
+        // Tăng lượt xem (Optional: Bạn có thể thêm logic tăng views ở đây, 
+        // nhưng tôi sẽ giữ logic cơ bản để tránh làm phức tạp thêm)
 
         req.setAttribute("video", video);
 
-        req.getRequestDispatcher("/views/VideoDetails.jsp")
+        // Sử dụng layout chung của người dùng
+        req.setAttribute("page", "/views/user/video-detail.jsp");
+        req.getRequestDispatcher("/views/userPageLayout.jsp")
            .forward(req, resp);
     }
 }
