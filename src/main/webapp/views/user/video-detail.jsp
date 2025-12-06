@@ -40,10 +40,41 @@
             </iframe>
         </div>
         
-        <div class="mb-3">
-            <button class="btn btn-danger"><i class="bi bi-heart me-2"></i>Thích</button>
-            <button class="btn btn-primary"><i class="bi bi-share me-2"></i>Chia sẻ</button>
-        </div>
+        <div class="mb-3 d-flex gap-2">
+    <a href="${pageContext.request.contextPath}/video/like?id=${video.id}" 
+       class="btn ${isLiked ? 'btn-danger' : 'btn-outline-danger'}">
+       <i class="bi bi-heart${isLiked ? '-fill' : ''} me-2"></i> 
+       ${isLiked ? 'Đã thích' : 'Thích'}
+    </a>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shareModal">
+        <i class="bi bi-share me-2"></i>Chia sẻ
+    </button>
+</div>
+
+<div class="modal fade" id="shareModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="${pageContext.request.contextPath}/video/share" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title">Chia sẻ video qua Email</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="videoId" value="${video.id}">
+            <div class="mb-3">
+                <label>Email người nhận:</label>
+                <input type="email" name="email" class="form-control" required placeholder="name@example.com">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary">Gửi</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
         
         <h4>Mô tả</h4>
         <p>${video.description}</p>

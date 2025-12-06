@@ -1,41 +1,53 @@
 package servlet;
 
-import entity.Video;
 import java.io.IOException;
-
 import dao.VideoDAO;
 import dao.impl.VideoDAOImpl;
-import jakarta.servlet.*;
+import dao.FavoriteDAO;
+import dao.impl.FavoriteDAOImpl;
+import entity.Video;
+import entity.User;
+import entity.Favorite;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/video/detail")
 public class VideoDetailServlet extends HttpServlet {
-	
-	
     private VideoDAO videoDAO = new VideoDAOImpl();
+    private FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
-
-        String id = req.getParameter("id");
-
-        if(id == null) {
-            resp.sendRedirect(req.getContextPath() + "/home");
-            return;
-        }
-
-        Video video = videoDAO.findById(id);
         
-        // Tăng lượt xem (Optional: Bạn có thể thêm logic tăng views ở đây, 
-        // nhưng tôi sẽ giữ logic cơ bản để tránh làm phức tạp thêm)
+        String id = req.getParameter("id");
+        Video video = videoDAO.findById(id);
 
-        req.setAttribute("video", video);
+        if (video != null) {
+            // 1. Tăng view
+            video.setViews(video.getViews() + 1);
+            videoDAO.update(video);
 
-        // Sử dụng layout chung của người dùng
-        req.setAttribute("page", "/views/user/video-detail.jsp");
-        req.getRequestDispatcher("/views/userPageLayout.jsp")
-           .forward(req, resp);
+            // 2. Kiểm tra user đã like chưa (nếu đã đăng nhập)
+            HttpSession session = req.getSession();
+            User user = (User) session.getAttribute("currentUser");
+            boolean isLiked = false;
+            if (user != null) {
+                Favorite fav = favoriteDAO.findByUserAndVideo(user.getId(), video.getId());
+                if (fav != null) isLiked = true;
+            }
+            req.setAttribute("isLiked", isLiked);
+            req.setAttribute("video", video);
+            
+            // Chuyển hướng
+            req.setAttribute("page", "/views/user/video-detail.jsp");
+            req.getRequestDispatcher("/views/userPageLayout.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/home");
+        }
     }
 }

@@ -109,14 +109,29 @@ public class Index extends HttpServlet {
         // XỬ LÝ TRANG NGƯỜI DÙNG
         // -------------------------
         else if (uri.contains("/home")) {
-
-            // Lấy danh sách video
             List<Video> videoList = videoDAO.findAll();
-
-            // Gửi sang view
             req.setAttribute("videoList", videoList);
-
             req.setAttribute("page", "/views/user/home.jsp");
+        } 
+        // MỚI: Xử lý trang Thịnh hành
+        else if (uri.contains("/trending")) {
+            List<Video> trendingList = videoDAO.findTopViews(10); // Lấy top 10
+            req.setAttribute("videoList", trendingList);
+            req.setAttribute("page", "/views/user/home.jsp"); // Tái sử dụng giao diện home
+        }
+        // MỚI: Xử lý trang Yêu thích
+        else if (uri.contains("/favorites")) {
+            User user = (User) session.getAttribute("currentUser");
+            if (user != null) {
+                // Bạn cần thêm import FavoriteDAO
+                dao.FavoriteDAO favDao = new dao.impl.FavoriteDAOImpl();
+                List<entity.Favorite> favList = favDao.findByUserId(user.getId());
+                req.setAttribute("favList", favList);
+                req.setAttribute("page", "/views/user/favorites.jsp"); // Trang riêng cho yêu thích
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
         }
 
         req.getRequestDispatcher(layout).forward(req, resp);

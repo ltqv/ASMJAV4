@@ -46,10 +46,17 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("currentUser", user);
 
 				// Phân quyền admin và user
-				if (Boolean.TRUE.equals(user.getAdmin())) {
-					resp.sendRedirect(req.getContextPath() + "/admin/videoManager");
-				} else {
-					resp.sendRedirect(req.getContextPath() + "/home");
+				if (user != null && user.getPassword().equals(password)) {
+				    // Lưu thông tin User vào Session
+				    req.getSession().setAttribute("user", user); 
+
+				    if (user.getAdmin()) {
+				        // Nếu là Admin (Admin = true) thì chuyển hướng đến trang quản trị
+				        resp.sendRedirect(req.getContextPath() + "/admin/videos"); 
+				    } else {
+				        // Nếu là User thường thì chuyển hướng về trang chủ
+				        resp.sendRedirect(req.getContextPath() + "/index");
+				    }
 				}
 				return;
 			}

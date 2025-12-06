@@ -7,7 +7,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import util.XJPA;
 import dao.VideoDAO;
-
+import dao.VideoDAO;
 public class VideoDAOImpl implements VideoDAO {
 
     private EntityManager em = XJPA.getEntityManager();
@@ -61,6 +61,18 @@ public class VideoDAOImpl implements VideoDAO {
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
+        }
+    }
+    @Override
+    public List<Video> findTopViews(int top) {
+        EntityManager em = XJPA.getEntityManager();
+        try {
+            String jpql = "SELECT v FROM Video v WHERE v.active = true ORDER BY v.views DESC";
+            TypedQuery<Video> query = em.createQuery(jpql, Video.class);
+            query.setMaxResults(top);
+            return query.getResultList();
+        } finally {
+            em.close();
         }
     }
 }

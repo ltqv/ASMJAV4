@@ -89,8 +89,8 @@ footer {
 <div class="sidebar">
     <h4 class="text-center mb-4">Lofi chill LTQV</h4>
     <a href="${pageContext.request.contextPath}/home"><i class="bi bi-house me-2"></i>Trang Chủ</a>
-    <a href="#"><i class="bi bi-heart me-2"></i>Yêu thích</a>
-    <a href="#"><i class="bi bi-bar-chart me-2"></i>Thịnh hành</a>
+<a href="${pageContext.request.contextPath}/favorites"><i class="bi bi-heart me-2"></i>Yêu thích</a>
+<a href="${pageContext.request.contextPath}/trending"><i class="bi bi-bar-chart me-2"></i>Thịnh hành</a>
     <div class="user-section">
         <c:choose>
             <c:when test="${empty sessionScope.currentUser}">
