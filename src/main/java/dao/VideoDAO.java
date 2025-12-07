@@ -1,8 +1,7 @@
-// src/main/java/dao/VideoDAO.java
-
 package dao;
 import java.util.List;
 import entity.Video;
+import entity.Share; // Import entity Share
 
 public interface VideoDAO {
     List<Video> findAll();
@@ -10,10 +9,9 @@ public interface VideoDAO {
     void create(Video video);
     void update(Video video);
     void delete(String id);
-    
-    // MỚI: Lấy danh sách thịnh hành (Top views)
     List<Video> findTopViews(int top);
+    void incrementViews(String id);
     
-    // 👈 KHẮC PHỤC: THÊM DÒNG NÀY VÀO INTERFACE
-    void incrementViews(String id); 
+    // MỚI: Lấy danh sách chia sẻ của một video cụ thể
+    List<Share> findSharesByVideoId(String videoId);
 }

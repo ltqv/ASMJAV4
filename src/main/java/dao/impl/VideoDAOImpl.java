@@ -124,4 +124,16 @@ public class VideoDAOImpl implements VideoDAO {
             em.close();
         }
     }
+    @Override
+    public List<Share> findSharesByVideoId(String videoId) {
+        EntityManager em = XJPA.getEntityManager();
+        try {
+            String jpql = "SELECT s FROM Share s WHERE s.video.id = :videoId";
+            TypedQuery<Share> query = em.createQuery(jpql, Share.class);
+            query.setParameter("videoId", videoId);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
