@@ -9,7 +9,7 @@ public class Video {
     @Column(length = 50)
     private String id;
 
-    @Column(length = 200, nullable = false)
+    @Column(columnDefinition = "nvarchar(255)", nullable = false)
     private String title;
 
     @Column(length = 200)
