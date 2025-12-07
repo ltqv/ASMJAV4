@@ -46,7 +46,7 @@ public class VideoCrudServlet extends HttpServlet {
                     updateVideo(req, videoId);
                     break;
                 case "delete":
-                    deleteVideo(req,videoId);
+                    deleteVideo(req, videoId);
                     break;
                 default:
                     throw new Exception("Hành động không hợp lệ.");
@@ -91,15 +91,17 @@ public class VideoCrudServlet extends HttpServlet {
         req.getSession().setAttribute("adminMessageType", "success");
     }
 
+ // Thêm tham số HttpServletRequest req
     private void deleteVideo(HttpServletRequest req, String id) throws Exception {
         Video video = dao.findById(id);
         if (video == null) {
              throw new Exception("Không tìm thấy video để xoá.");
         }
-        // Xoá mềm: set active=false
+        // Xoá mềm
         video.setActive(false);
         dao.update(video); 
-        
+
+        // Bây giờ dòng này sẽ hết lỗi đỏ
         req.getSession().setAttribute("adminMessage", "Xoá video thành công (đã set Active = false).");
         req.getSession().setAttribute("adminMessageType", "success");
     }

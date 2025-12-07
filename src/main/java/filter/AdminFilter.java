@@ -23,7 +23,8 @@ public class AdminFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
 
         // Lấy User từ Session
-        User user = (User) req.getSession().getAttribute("user");
+     
+        User user = (User) req.getSession().getAttribute("currentUser");
 
         if (user != null && user.getAdmin()) {
             // Đã đăng nhập và là Admin: Cho phép truy cập

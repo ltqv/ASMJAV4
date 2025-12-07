@@ -30,41 +30,34 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String id = req.getParameter("id");
-		String password = req.getParameter("password");
+	    String id = req.getParameter("id");
+	    String password = req.getParameter("password");
 
-		try {
-			User user = dao.findById(id);
-			if (user == null) {
-				req.setAttribute("message", "Tài khoản không tồn tại");
-			} else if (!user.getPassword().equals(password)) {
-				req.setAttribute("message", "Sai mật khẩu!");
-			} else {
-				// Đăng nhập thành công lưu vào session
-				HttpSession session = req.getSession();
-				session.setAttribute("currentUser", user);
+	    try {
+	        User user = dao.findById(id);
+	        if (user == null) {
+	            req.setAttribute("message", "Tài khoản không tồn tại");
+	        } else if (!user.getPassword().equals(password)) {
+	            req.setAttribute("message", "Sai mật khẩu!");
+	        } else {
+	            // 1. Đăng nhập thành công -> Lưu session thống nhất là "currentUser"
+	            HttpSession session = req.getSession();
+	            session.setAttribute("currentUser", user);
 
-				// Phân quyền admin và user
-				if (user != null && user.getPassword().equals(password)) {
-				    // Lưu thông tin User vào Session
-				    req.getSession().setAttribute("user", user); 
-
-				    if (user.getAdmin()) {
-				        // Nếu là Admin (Admin = true) thì chuyển hướng đến trang quản trị
-				        resp.sendRedirect(req.getContextPath() + "/admin/videos"); 
-				    } else {
-				        // Nếu là User thường thì chuyển hướng về trang chủ
-				        resp.sendRedirect(req.getContextPath() + "/index");
-				    }
-				}
-				return;
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			req.setAttribute("message", "Lỗi hệ thống: " + e.getMessage());
-		}
-		req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+	            // 2. Phân quyền và chuyển hướng đúng đường dẫn (Mapping trong Index.java)
+	            if (Boolean.TRUE.equals(user.getAdmin())) {
+	                // Sửa: /admin/videos -> /admin/videoManager
+	                resp.sendRedirect(req.getContextPath() + "/admin/videoManager"); 
+	            } else {
+	                // Sửa: /index -> /home
+	                resp.sendRedirect(req.getContextPath() + "/home");
+	            }
+	            return;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        req.setAttribute("message", "Lỗi hệ thống: " + e.getMessage());
+	    }
+	    req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
 	}
 }

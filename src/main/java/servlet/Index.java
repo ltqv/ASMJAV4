@@ -20,7 +20,9 @@ import jakarta.servlet.http.HttpSession; // Thêm import
     "/admin/userManager",
     "/admin/report",
     "/admin/video/list",
-    "/admin/video/details" // Thêm cho chỉnh sửa/tạo mới
+    "/admin/video/details" ,
+    "/trending",  // <--- THÊM DÒNG NÀY
+    "/favorites"// Thêm cho chỉnh sửa/tạo mới
 })
 public class Index extends HttpServlet {
 
