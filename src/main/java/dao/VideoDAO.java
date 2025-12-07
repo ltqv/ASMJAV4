@@ -1,3 +1,5 @@
+// src/main/java/dao/VideoDAO.java
+
 package dao;
 import java.util.List;
 import entity.Video;
@@ -11,4 +13,7 @@ public interface VideoDAO {
     
     // MỚI: Lấy danh sách thịnh hành (Top views)
     List<Video> findTopViews(int top);
+    
+    // 👈 KHẮC PHỤC: THÊM DÒNG NÀY VÀO INTERFACE
+    void incrementViews(String id); 
 }

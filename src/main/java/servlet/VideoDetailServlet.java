@@ -28,9 +28,17 @@ public class VideoDetailServlet extends HttpServlet {
         Video video = videoDAO.findById(id);
 
         if (video != null) {
-            // 1. Tăng view
-            video.setViews(video.getViews() + 1);
-            videoDAO.update(video);
+            // 1. Tăng view (SỬA ĐỔI - Sử dụng atomic update và reload)
+            try {
+                // Tăng view một cách an toàn (atomic update)
+                videoDAO.incrementViews(video.getId()); 
+                
+                // Tải lại đối tượng Video để có view count mới nhất
+                video = videoDAO.findById(id); 
+            } catch (Exception e) {
+                // In ra lỗi nhưng vẫn tiếp tục hiển thị video
+                e.printStackTrace();
+            }
 
             // 2. Kiểm tra user đã like chưa (nếu đã đăng nhập)
             HttpSession session = req.getSession();
