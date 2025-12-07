@@ -40,14 +40,18 @@
             <input type="text" name="title" class="form-control" value="${video.title}" required placeholder="Nhập tiêu đề">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Poster (URL)</label>
-            <input type="text" name="poster" class="form-control" value="${video.poster}" placeholder="Nhập URL hình ảnh (Nếu không có, có thể dùng ảnh mặc định)">
+       <div class="mb-3">
+            <label class="form-label">Link YouTube</label>
+            <%-- Người dùng chỉ cần paste link vào đây (ví dụ: https://www.youtube.com/watch?v=AbCdEfGh) --%>
+            <input type="text" name="link" class="form-control" value="${video.link}" required 
+                   placeholder="Nhập link YouTube (VD: https://youtu.be/...) - Hệ thống sẽ tự lấy Poster">
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Link YouTube</label>
-            <input type="text" name="link" class="form-control" value="${video.link}" required placeholder="Nhập Link YouTube (ví dụ: https://www.youtube.com/watch?v=...)">
+            <label class="form-label">Poster (URL)</label>
+            <%-- Thêm chú thích hoặc để readonly nếu bạn muốn bắt buộc dùng ảnh Youtube --%>
+            <input type="text" name="poster" class="form-control" value="${video.poster}" 
+                   placeholder="Để trống để tự động lấy ảnh từ YouTube">
         </div>
         
         <div class="mb-3 form-check">

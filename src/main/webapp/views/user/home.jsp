@@ -39,26 +39,13 @@
 
         <c:forEach var="v" items="${videoList}">
 
-            <!-- Tách YouTube ID từ link -->
-            <c:choose>
-                <c:when test="${fn:contains(v.link, 'youtu.be/')}">
-                    <c:set var="ytId" value="${fn:substringAfter(v.link, 'youtu.be/')}" />
-                </c:when>
-
-                <c:when test="${fn:contains(v.link, 'v=')}">
-                    <c:set var="ytId" value="${fn:substringAfter(v.link, 'v=')}" />
-                </c:when>
-
-                <c:otherwise>
-                    <c:set var="ytId" value="" />
-                </c:otherwise>
-            </c:choose>
-
-            <div class="col">
+         <div class="col">
                <div class="video-card" onclick="location.href='video/detail?id=${v.id}'">
 
                     <div class="video-container">
-                        <img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg">
+                        <%-- SỬA: Lấy trực tiếp từ poster đã lưu trong DB --%>
+                        <img src="${v.poster}" alt="${v.title}" 
+                             onerror="this.src='https://placehold.co/600x400?text=No+Image'"> 
                     </div>
 
                     <div class="video-title">${v.title}</div>

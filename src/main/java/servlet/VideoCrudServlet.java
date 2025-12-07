@@ -12,7 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
+import java.util.regex.Matcher; 
+import java.util.regex.Pattern;
 @WebServlet("/admin/video/crud")
 public class VideoCrudServlet extends HttpServlet {
 
@@ -107,17 +108,55 @@ public class VideoCrudServlet extends HttpServlet {
     }
     
     // Phương thức chung để lấy dữ liệu từ request và gán vào entity
+ // 1. Phương thức lấy dữ liệu từ form và xử lý tự động
     private void bindVideo(HttpServletRequest req, Video video, String action) {
+        String title = req.getParameter("title");
+        String rawLink = req.getParameter("link"); // Link gốc người dùng paste vào
+        String poster = req.getParameter("poster");
+        String description = req.getParameter("description");
         
-        video.setTitle(req.getParameter("title"));
-        video.setPoster(req.getParameter("poster"));
-
-        // Lấy active từ form (checkbox không check sẽ là null)
+        // Xử lý Active
         String activeParam = req.getParameter("active");
         boolean active = activeParam != null && activeParam.equals("true");
-        video.setActive(active);
 
-        video.setDescription(req.getParameter("description"));
-        video.setLink(req.getParameter("link"));
+        // --- LOGIC MỚI: TỰ ĐỘNG XỬ LÝ LINK VÀ POSTER ---
+        if (rawLink != null && !rawLink.isEmpty()) {
+            String youtubeId = getYouTubeId(rawLink);
+            
+            if (youtubeId != null && !youtubeId.isEmpty()) {
+                // Tự động chuyển thành link Embed để xem được trên web
+                video.setLink("https://www.youtube.com/embed/" + youtubeId);
+                
+                // Nếu người dùng KHÔNG nhập poster, hoặc muốn tự động lấy poster từ Youtube
+                // (Ưu tiên: Nếu ô poster trống thì tự lấy. Nếu muốn luôn tự lấy thì bỏ check rỗng)
+                if (poster == null || poster.trim().isEmpty()) {
+                    // Lấy ảnh thumbnail chất lượng cao nhất (maxresdefault)
+                    video.setPoster("https://img.youtube.com/vi/" + youtubeId + "/maxresdefault.jpg");
+                } else {
+                    video.setPoster(poster);
+                }
+            } else {
+                // Nếu không nhận diện được ID Youtube, giữ nguyên link cũ
+                video.setLink(rawLink);
+                video.setPoster(poster);
+            }
+        }
+        // ------------------------------------------------
+
+        video.setTitle(title);
+        video.setDescription(description);
+        video.setActive(active);
+    }
+    
+    private String getYouTubeId(String url) {
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*";
+        
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(url);
+        
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
     }
 }
