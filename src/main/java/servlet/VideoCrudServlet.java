@@ -97,7 +97,7 @@ public class VideoCrudServlet extends HttpServlet {
         if (video == null) {
              throw new Exception("Không tìm thấy video để xoá.");
         }
-        // Xoá mềm
+        // Xoá mềm	
         video.setActive(false);
         dao.update(video); 
 

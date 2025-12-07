@@ -6,18 +6,18 @@
              version="3.0">
 
     <persistence-unit name="asmJAV4">
-        <!-- Cấu hình entity -->
-        
+        <class>entity.User</class>
+        <class>entity.Video</class>
+        <class>entity.Favorite</class>
+        <class>entity.Share</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
-        <!-- Kết nối SQL Server -->
         <properties>
-            <!-- JDBC -->
             <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1444;databaseName=asmJAV4;encrypt=false;"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
             <property name="jakarta.persistence.jdbc.password" value="Vinhledz7479@1234"/>
 
-            <!-- Hibernate -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>

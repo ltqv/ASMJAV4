@@ -1,4 +1,5 @@
 package dao.impl;
+
 import java.util.ArrayList;
 import java.util.List;
 import dao.FavoriteDAO;
@@ -66,25 +67,12 @@ public class FavoriteDAOImpl implements FavoriteDAO {
         } finally { em.close(); }
     }
     
- // THÊM: Thống kê số lượng người thích cho từng video
-    @Override
-    public List<Object[]> reportVideoLikes() {
-        EntityManager em = XJPA.getEntityManager();
-        try {
-            // JPQL group by video.id và count
-            String jpql = "SELECT f.video.id, f.video.title, COUNT(f) FROM Favorite f GROUP BY f.video.id, f.video.title ORDER BY COUNT(f) DESC";
-            TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
-            return query.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-    
+    // --- ĐÃ XÓA PHƯƠNG THỨC THỪA reportVideoLikes GÂY LỖI ---
+
     @Override
     public List<Object[]> getLikeStats() {
         EntityManager em = XJPA.getEntityManager();
         try {
-            // Thống kê: Tiêu đề Video - Số lượt thích - ID Video
             String jpql = "SELECT f.video.title, COUNT(f), f.video.id FROM Favorite f GROUP BY f.video.title, f.video.id";
             return em.createQuery(jpql, Object[].class).getResultList();
         } catch (Exception e) {
