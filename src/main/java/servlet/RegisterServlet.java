@@ -28,40 +28,40 @@ public class RegisterServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
 		try {
 			User user = new User();
-			// Lay du lieu tu from
 			user.setId(req.getParameter("id"));
 			user.setPassword(req.getParameter("password"));
 			user.setFullname(req.getParameter("fullname"));
 			user.setEmail(req.getParameter("email"));
-			user.setAdmin(false); // Mac dinh la user
+			user.setAdmin(false);
 
-			// Kiem tra trung id
-			User existUser = dao.findById(user.getId());
-			if (existUser != null) {
+			if (dao.findById(user.getId()) != null) {
 				req.setAttribute("message", "Tên đăng nhập đã được sử dụng!");
 				req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
 				return;
 			}
 
-			// Kiem tra trung email
-			User existEmail = dao.findByEmail(user.getEmail());
-			if (existEmail != null) {
+			if (dao.findByEmail(user.getEmail()) != null) {
 				req.setAttribute("message", "Email đã được sử dụng");
 				req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
 				return;
 			}
+
 			dao.create(user);
-			req.setAttribute("message", "Đăng ký thành công, mời đăng nhập");
-			req.getRequestDispatcher("/views/login.jsp").forward(req, resp);
+
+			// ✅ QUAN TRỌNG
+			resp.sendRedirect(req.getContextPath() + "/login");
+			return;
+
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			req.setAttribute("message", "Lỗi đăng ký: " + e.getMessage());
 			req.getRequestDispatcher("/views/register.jsp").forward(req, resp);
 		}
 	}
+
 }

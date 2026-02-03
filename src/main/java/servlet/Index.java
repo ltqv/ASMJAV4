@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpSession;
     "/admin/video/details",
     "/trending",
     "/favorites"
+
 })
 public class Index extends HttpServlet {
 
